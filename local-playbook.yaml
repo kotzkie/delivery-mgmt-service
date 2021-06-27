@@ -1,0 +1,49 @@
+---
+- gather_facts: false
+  hosts: localhost
+  name: "Local Delivery Management API ansible playbook ( build -> deployment for local kubernetes / docker for desktop )"
+  vars:
+    docker_image: "{{ docker_image_ | default('com.mynt.delivery-mgmt-svc:1.0.0')  }}"
+    helm_deployment_name: "{{ helm_deployment_name_  | default('delivery-mgmt-svc') }}"
+    artifact_version: "{{ artifact_version_  | default('build/libs/delivery-mgmt-service-1.0.0.jar') }}"
+  tasks:
+    - name: Build the java based application
+      command: ./gradlew build
+      tags:
+        - build
+        - app
+    - name: Perform java artifact unit test
+      command: ./gradlew test
+      tags:
+        - test
+        - app
+    - name: Generate jacoco code coverage report
+      command: ./gradlew jacocoTestReport
+      tags:
+        - test
+        - app
+    - name: Perform owasp dependency check
+      command: ./gradlew dependencyCheckAnalyze
+      tags:
+        - test
+        - app
+    - name: Perform integration test
+      command: ./gradlew integrationTest
+      tags:
+        - test
+        - app
+    - name: Build the docker image
+      command: docker build -t {{ docker_image  }} --build-arg JAR_FILE={{ artifact_version  }} .
+      tags:
+        - build
+        - container
+    - name: Check helm deployment entries
+      command: helm del {{ helm_deployment_name }}
+      ignore_errors: true
+      tags:
+        - deploy
+    - name: Deploy on local kubernetes / docker for desktop using helm
+      command: helm install {{ helm_deployment_name }} ./helm/delivery-mgmt-svc
+      tags:
+        - deploy
+

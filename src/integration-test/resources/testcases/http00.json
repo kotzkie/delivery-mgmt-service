@@ -1,0 +1,4 @@
+{"request": {"method": "POST", "url": "/parcel", "headers": {"Content-Type": "application/json"}, "body": { "weight" :  50, "height" :  100, "width" :  100, "length" :  100}}, "response": {"status_code": 200, "headers": {}, "body": {}}}
+{"request": {"method": "POST", "url": "/parcel", "headers": {"Content-Type": "application/json"}, "body": { "weight" :  9, "height" :  10, "width" :  12, "length" :  9}}, "response": {"status_code": 200, "headers": {}, "body": {}}}
+{"request": {"method": "POST", "url": "/parcel", "headers": {"Content-Type": "application/json"}, "body": { "weight" :  11, "height" :  10, "width" :  12, "length" :  9}}, "response": {"status_code": 200, "headers": {}, "body": {}}}
+{"request": {"method": "POST", "url": "/parcel", "headers": {"Content-Type": "application/json"}, "body": { "weight" :  11, "height" :  10, "width" :  12, "length" :  9, "voucher" :  "MYNT"}}, "response": {"status_code": 200, "headers": {}, "body": {}}}

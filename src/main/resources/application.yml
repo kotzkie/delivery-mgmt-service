@@ -1,0 +1,31 @@
+logging:
+  pattern:
+    console: "%d{dd-MM-yyyy HH:mm:ss.SSS} %yellow([%X{x-correlation-id}]) %magenta([%thread]) %highlight(%-5level) %logger.%M - %msg%n"
+server:
+  port: 8080
+  shutdown: graceful
+  servlet:
+    context-path: "/api"
+
+#parcel:
+#  heavyParcelBaseCharge: 50
+#  smallParcelBaseCharge: 5
+#  mediumParcelBaseCharge: 10
+#  largeParcelBaseCharge: 15
+
+
+management:
+  context-path: /
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    export:
+      prometheus:
+        enabled: true

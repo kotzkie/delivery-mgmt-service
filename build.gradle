@@ -1,0 +1,79 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.asciidoctor.convert' version '1.5.8'
+    id 'java'
+    id 'jacoco'
+    id "org.owasp.dependencycheck" version "6.1.6"
+    id 'org.unbroken-dome.test-sets' version '4.0.0'
+}
+
+
+
+group 'org.mynt'
+version '1.0.0'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+compileJava   {
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.6.6'
+    implementation group: 'io.micrometer', name: 'micrometer-core', version: '1.6.6'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.5.9'
+
+
+
+    compileOnly 'org.projectlombok:lombok'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompile('junit:junit')
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
+}
+
+
+jacoco {
+    toolVersion = "0.8.5"
+    reportsDir = file("$buildDir/jacoco")
+
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+testSets {
+    integrationTest { dirName = 'integration-test' }
+}
+
+jacocoTestReport {
+    dependsOn test
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "**/*DTO*",
+                    "**/*Config.*",
+                    "**/*Interceptor.*",
+                    "**/*Advice.*",
+                    "**/*Properties*"
+            ] )
+        }))
+    }
+}
